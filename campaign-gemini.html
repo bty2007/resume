@@ -1,0 +1,2343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>bai (26) — 白天宇 · 主席团竞选</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Doto:wght@400;600&family=Noto+Sans+SC:wght@300;400&family=Space+Grotesk:wght@300;400&family=Space+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  /* =========================================================
+     NOTHING DESIGN SYSTEM TOKENS — STRICT MONOCHROME + SIGNAL
+     ========================================================= */
+  :root {
+    --ink: #000000;
+    --paper: #FFFFFF;
+    --muted: #585A5A;
+    --surface: #F2F2F2;
+    --hairline: #E5E7EB;
+    --signal: #D71921;
+
+    --font-display: "Doto", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    --font-sans: "Space Grotesk", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    --font-mono: "Space Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+    --t-micro: 100ms;
+    --t-small: 200ms;
+    --t-medium: 400ms;
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+    --s-1: 4px;
+    --s-2: 8px;
+    --s-4: 16px;
+    --s-6: 24px;
+    --s-8: 32px;
+    --s-12: 48px;
+    --s-16: 64px;
+    --s-24: 96px;
+
+    --container: 1280px;
+    --gutter: 24px;
+    --radius-card: 12px;
+    --radius-pill: 9999px;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body.is-dark-root {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  button {
+    font-family: inherit;
+    color: inherit;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  button:focus-visible {
+    outline: 1px solid var(--ink);
+    outline-offset: 2px;
+  }
+
+  body.is-dark-root button:focus-visible {
+    outline-color: var(--paper);
+  }
+
+  /* =========================================================
+     PROGRESS HAIRLINE (TOP EDGE)
+     ========================================================= */
+  .progress-track {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--hairline);
+    z-index: 80;
+  }
+
+  body.is-dark-root .progress-track {
+    background: var(--muted);
+  }
+
+  .progress-bar {
+    height: 100%;
+    width: 10%;
+    background: var(--ink);
+    transition: width var(--t-medium) var(--ease), background var(--t-small) var(--ease);
+  }
+
+  body.is-dark-root .progress-bar {
+    background: var(--paper);
+  }
+
+  /* =========================================================
+     TOP TELEMETRY BAR
+     ========================================================= */
+  .topbar {
+    position: fixed;
+    top: 2px;
+    left: 0;
+    right: 0;
+    height: 64px;
+    z-index: 60;
+    border-bottom: 1px solid var(--hairline);
+    background: var(--paper);
+    color: var(--ink);
+    transition: background var(--t-medium) var(--ease), color var(--t-medium) var(--ease), border-color var(--t-medium) var(--ease);
+  }
+
+  body.is-dark-root .topbar {
+    background: var(--ink);
+    color: var(--paper);
+    border-bottom-color: var(--muted);
+  }
+
+  .topbar-inner {
+    max-width: var(--container);
+    height: 100%;
+    margin: 0 auto;
+    padding: 0 var(--s-6);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-4);
+  }
+
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: var(--s-4);
+  }
+
+  .brand-wordmark {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 3vw, 36px);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    line-height: 1;
+    color: var(--ink);
+  }
+
+  body.is-dark-root .brand-wordmark {
+    color: var(--paper);
+  }
+
+  .brand-meta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  body.is-dark-root .brand-meta {
+    color: var(--hairline);
+  }
+
+  .topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--s-4);
+  }
+
+  .link-btn {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+    padding: var(--s-2) 0;
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--t-small) var(--ease), opacity var(--t-small) var(--ease);
+  }
+
+  .link-btn:hover,
+  .link-btn.is-on {
+    border-bottom-color: var(--ink);
+  }
+
+  body.is-dark-root .topbar .link-btn {
+    color: var(--paper);
+  }
+
+  body.is-dark-root .topbar .link-btn:hover,
+  body.is-dark-root .topbar .link-btn.is-on {
+    border-bottom-color: var(--paper);
+  }
+
+  /* =========================================================
+     SLIDE DECK ENGINE
+     ========================================================= */
+  .deck {
+    position: fixed;
+    inset: 0;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    padding: 84px var(--s-6) 96px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--paper);
+    color: var(--ink);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    overflow-y: auto;
+    transition: opacity var(--t-medium) var(--ease), visibility 0s linear var(--t-medium);
+  }
+
+  .slide.is-dark {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .slide.is-active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity var(--t-medium) var(--ease), visibility 0s;
+  }
+
+  .stage {
+    width: 100%;
+    max-width: var(--container);
+    margin: auto 0;
+  }
+
+  /* Subtle staggered entrance — no bounce */
+  .rise {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity var(--t-medium) var(--ease), transform var(--t-medium) var(--ease);
+  }
+
+  .slide.is-active .rise {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .slide.is-active .rise:nth-child(1) { transition-delay: 40ms; }
+  .slide.is-active .rise:nth-child(2) { transition-delay: 110ms; }
+  .slide.is-active .rise:nth-child(3) { transition-delay: 180ms; }
+  .slide.is-active .rise:nth-child(4) { transition-delay: 250ms; }
+  .slide.is-active .rise:nth-child(5) { transition-delay: 320ms; }
+
+  /* =========================================================
+     12-COLUMN GRID SYSTEM
+     ========================================================= */
+  .grid-12 {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--gutter);
+    align-items: start;
+  }
+
+  .grid-12.align-center {
+    align-items: center;
+  }
+
+  .col-3 { grid-column: span 3; }
+  .col-4 { grid-column: span 4; }
+  .col-5 { grid-column: span 5; }
+  .col-6 { grid-column: span 6; }
+  .col-7 { grid-column: span 7; }
+  .col-8 { grid-column: span 8; }
+  .col-12 { grid-column: span 12; }
+
+  /* =========================================================
+     TYPOGRAPHY — STRICT THREE FONTS, THREE FIXED JOBS
+     ========================================================= */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+    font-size: clamp(48px, 8.5vw, 136px);
+    color: var(--ink);
+  }
+
+  .is-dark .display {
+    color: var(--paper);
+  }
+
+  .display-num {
+    font-family: var(--font-display);
+    font-weight: 400;
+    line-height: 1;
+    font-size: clamp(40px, 5vw, 72px);
+    color: var(--ink);
+  }
+
+  .is-dark .display-num {
+    color: var(--paper);
+  }
+
+  .headline {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    font-size: clamp(40px, 5.2vw, 72px);
+    color: var(--ink);
+  }
+
+  .is-dark .headline {
+    color: var(--paper);
+  }
+
+  .subhead {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    font-size: clamp(20px, 2.4vw, 32px);
+    color: var(--ink);
+  }
+
+  .is-dark .subhead {
+    color: var(--paper);
+  }
+
+  .body-copy {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    line-height: 1.7;
+    font-size: clamp(16px, 1.5vw, 20px);
+    color: var(--ink);
+    max-width: 34em;
+  }
+
+  .is-dark .body-copy {
+    color: var(--paper);
+  }
+
+  .body-muted {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    line-height: 1.6;
+    font-size: 15px;
+    color: var(--muted);
+  }
+
+  .is-dark .body-muted {
+    color: var(--hairline);
+  }
+
+  /* Mono blocks: strictly 11px or 12px, uppercase, 0.08em tracking, never mixed */
+  .mono-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .is-dark .mono-label {
+    color: var(--hairline);
+  }
+
+  .mono-kicker {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    margin-bottom: var(--s-6);
+  }
+
+  .is-dark .mono-kicker {
+    color: var(--hairline);
+  }
+
+  /* =========================================================
+     CORE COMPONENTS
+     ========================================================= */
+  .hairline {
+    border: none;
+    border-top: 1px solid var(--hairline);
+    margin: var(--s-6) 0;
+  }
+
+  .is-dark .hairline {
+    border-top-color: var(--muted);
+  }
+
+  /* Primary Button: black bg, white text, pill 9999px, min-h 44px, pad 0 24px, mono 12px */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-2);
+    min-height: 44px;
+    padding: 0 var(--s-6);
+    border-radius: var(--radius-pill);
+    background: var(--ink);
+    color: var(--paper);
+    border: 1px solid var(--ink);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: background var(--t-small) var(--ease), color var(--t-small) var(--ease), border-color var(--t-small) var(--ease);
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  .is-dark .btn-primary,
+  body.is-dark-root .hud .btn-primary {
+    background: var(--paper);
+    color: var(--ink);
+    border-color: var(--paper);
+  }
+
+  .is-dark .btn-primary:hover:not(:disabled),
+  body.is-dark-root .hud .btn-primary:hover:not(:disabled) {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  /* Secondary Button: transparent, 1px solid ink border, pill */
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-2);
+    min-height: 44px;
+    padding: 0 var(--s-6);
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--ink);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: background var(--t-small) var(--ease), color var(--t-small) var(--ease);
+  }
+
+  .btn-secondary:hover:not(:disabled) {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .is-dark .btn-secondary,
+  body.is-dark-root .hud .btn-secondary {
+    color: var(--paper);
+    border-color: var(--paper);
+  }
+
+  .is-dark .btn-secondary:hover:not(:disabled),
+  body.is-dark-root .hud .btn-secondary:hover:not(:disabled) {
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  .btn-primary:disabled,
+  .btn-secondary:disabled {
+    opacity: 0.28;
+    cursor: default;
+  }
+
+  /* Card: surface #F2F2F2, radius 12px, padding 24px */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-card);
+    padding: var(--s-6);
+    transition: border-color var(--t-small) var(--ease), transform var(--t-small) var(--ease);
+  }
+
+  .is-dark .card {
+    background: var(--ink);
+    border-color: var(--muted);
+  }
+
+  /* Signal Indicator Dot: 8px circle, var(--signal), ZERO shadow */
+  .signal-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--signal);
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  .signal-dot.pulse {
+    animation: signal-pulse 3.6s var(--ease) infinite;
+  }
+
+  @keyframes signal-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.22; }
+  }
+
+  /* Spec Tag (mono 11px pill) */
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    margin-top: var(--s-6);
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--s-2) var(--s-4);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .is-dark .tag {
+    border-color: var(--muted);
+    color: var(--hairline);
+  }
+
+  /* =========================================================
+     SLIDE 01 & 10: PRECISION RADIAL BEACON (ZERO SHADOW / GRADIENT)
+     ========================================================= */
+  .hero-center {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .beacon-frame {
+    position: relative;
+    width: 144px;
+    height: 144px;
+    margin: var(--s-6) 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .beacon-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .beacon-spin {
+    transform-origin: 72px 72px;
+    animation: slow-rotate 32s linear infinite;
+  }
+
+  @keyframes slow-rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .cta-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--s-4);
+    margin-top: var(--s-8);
+  }
+
+  /* =========================================================
+     SLIDE 02: SPEC GRID
+     ========================================================= */
+  .spec-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 176px;
+  }
+
+  .spec-card:hover {
+    border-color: var(--ink);
+  }
+
+  .spec-unit {
+    margin-top: var(--s-4);
+    padding-top: var(--s-4);
+    border-top: 1px solid var(--hairline);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* =========================================================
+     SLIDE 03 & 09: INTERACTIVE STACK / LEDGER
+     ========================================================= */
+  .stack-list {
+    margin-top: var(--s-8);
+    border-top: 1px solid var(--hairline);
+  }
+
+  .is-dark .stack-list {
+    border-top-color: var(--muted);
+  }
+
+  .stack-row {
+    width: 100%;
+    text-align: left;
+    display: grid;
+    grid-template-columns: 88px 1fr auto;
+    align-items: center;
+    gap: var(--s-6);
+    padding: var(--s-6) 0;
+    border-bottom: 1px solid var(--hairline);
+    transition: padding-left var(--t-small) var(--ease), border-color var(--t-small) var(--ease);
+  }
+
+  .is-dark .stack-row {
+    border-bottom-color: var(--muted);
+  }
+
+  .stack-row:hover {
+    padding-left: var(--s-2);
+    border-bottom-color: var(--ink);
+  }
+
+  .is-dark .stack-row:hover {
+    border-bottom-color: var(--paper);
+  }
+
+  .stack-idx {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 4vw, 52px);
+    line-height: 1;
+    color: var(--ink);
+  }
+
+  .is-dark .stack-idx {
+    color: var(--paper);
+  }
+
+  .stack-title {
+    font-size: clamp(20px, 2.2vw, 28px);
+    font-weight: 400;
+    line-height: 1.25;
+  }
+
+  .stack-sub {
+    margin-top: var(--s-1);
+    font-size: 15px;
+    color: var(--muted);
+  }
+
+  .is-dark .stack-sub {
+    color: var(--hairline);
+  }
+
+  .stack-arrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition: transform var(--t-small) var(--ease), color var(--t-small) var(--ease);
+  }
+
+  .is-dark .stack-arrow {
+    color: var(--hairline);
+  }
+
+  .stack-row:hover .stack-arrow {
+    transform: translateX(4px);
+    color: var(--ink);
+  }
+
+  .is-dark .stack-row:hover .stack-arrow {
+    color: var(--paper);
+  }
+
+  /* Expandable Commitment Detail (Slide 09) */
+  .commit-item {
+    border-bottom: 1px solid var(--muted);
+  }
+
+  .commit-trigger {
+    width: 100%;
+    text-align: left;
+    display: grid;
+    grid-template-columns: 88px 1fr auto;
+    align-items: center;
+    gap: var(--s-6);
+    padding: var(--s-6) 0;
+  }
+
+  .commit-detail {
+    display: none;
+    padding: 0 0 var(--s-6) 112px;
+  }
+
+  .commit-item.is-open .commit-detail {
+    display: block;
+  }
+
+  .commit-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    margin-top: var(--s-4);
+  }
+
+  /* =========================================================
+     INTERACTIVE SPEC WIDGETS (SLIDES 04, 05, 06, 07, 08)
+     ========================================================= */
+  .widget-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: var(--s-4);
+    border-bottom: 1px solid var(--hairline);
+    margin-bottom: var(--s-6);
+  }
+
+  .is-dark .widget-head {
+    border-bottom-color: var(--muted);
+  }
+
+  .status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .is-dark .status-chip {
+    color: var(--paper);
+  }
+
+  .tab-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--s-2);
+    margin-bottom: var(--s-6);
+  }
+
+  .tab-bar.cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .tab-btn {
+    padding: var(--s-2) var(--s-2);
+    min-height: 36px;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition: background var(--t-small) var(--ease), color var(--t-small) var(--ease), border-color var(--t-small) var(--ease);
+  }
+
+  .tab-btn:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+
+  .tab-btn.is-active {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  .is-dark .tab-btn {
+    border-color: var(--muted);
+    color: var(--hairline);
+  }
+
+  .is-dark .tab-btn:hover {
+    border-color: var(--paper);
+    color: var(--paper);
+  }
+
+  .is-dark .tab-btn.is-active {
+    background: var(--paper);
+    color: var(--ink);
+    border-color: var(--paper);
+  }
+
+  .readout-box {
+    border-top: 1px solid var(--hairline);
+    padding-top: var(--s-4);
+  }
+
+  .is-dark .readout-box {
+    border-top-color: var(--muted);
+  }
+
+  .readout-title {
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: var(--s-2);
+  }
+
+  .spec-kv {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--s-2) 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .is-dark .spec-kv {
+    border-bottom-color: var(--muted);
+  }
+
+  .spec-kv:last-child {
+    border-bottom: none;
+  }
+
+  /* Field Protocol List (Slide 05) */
+  .protocol-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+  }
+
+  .protocol-btn {
+    width: 100%;
+    text-align: left;
+    padding: var(--s-4);
+    border: 1px solid var(--muted);
+    border-radius: var(--radius-card);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-4);
+    transition: border-color var(--t-small) var(--ease), background var(--t-small) var(--ease);
+  }
+
+  .protocol-btn:hover,
+  .protocol-btn.is-active {
+    border-color: var(--paper);
+  }
+
+  .protocol-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--s-4);
+  }
+
+  /* Half-Court Tactical SVG (Slide 06) */
+  .court-wrap {
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-card);
+    background: var(--paper);
+    padding: var(--s-4);
+    margin-bottom: var(--s-4);
+  }
+
+  .court-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .court-marker {
+    transition: cx var(--t-medium) var(--ease), cy var(--t-medium) var(--ease);
+  }
+
+  /* Content 2x2 Matrix (Slide 07) */
+  .matrix-2x2 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-4);
+  }
+
+  .matrix-cell {
+    text-align: left;
+    padding: var(--s-6);
+    border: 1px solid var(--muted);
+    border-radius: var(--radius-card);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 136px;
+    transition: border-color var(--t-small) var(--ease), background var(--t-small) var(--ease), color var(--t-small) var(--ease);
+  }
+
+  .matrix-cell:hover,
+  .matrix-cell.is-active {
+    border-color: var(--paper);
+  }
+
+  .matrix-cell.is-active {
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  .matrix-cell.is-active .mono-label {
+    color: var(--muted);
+  }
+
+  /* Position Matrix (Slide 08) */
+  .pos-card {
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .pos-card.is-target {
+    border-color: var(--ink);
+  }
+
+  /* Closing Footer (Slide 10) */
+  .slide-footer {
+    width: 100%;
+    margin-top: var(--s-12);
+    padding-top: var(--s-6);
+    border-top: 1px solid var(--hairline);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--s-4);
+  }
+
+  /* =========================================================
+     BOTTOM HUD BAR
+     ========================================================= */
+  .hud {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 68px;
+    z-index: 60;
+    background: var(--paper);
+    color: var(--ink);
+    border-top: 1px solid var(--hairline);
+    transition: background var(--t-medium) var(--ease), color var(--t-medium) var(--ease), border-color var(--t-medium) var(--ease);
+  }
+
+  body.is-dark-root .hud {
+    background: var(--ink);
+    color: var(--paper);
+    border-top-color: var(--muted);
+  }
+
+  body.is-dark-root .hud .mono-label {
+    color: var(--hairline);
+  }
+
+  .hud-inner {
+    max-width: var(--container);
+    height: 100%;
+    margin: 0 auto;
+    padding: 0 var(--s-6);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-4);
+  }
+
+  .hud-left {
+    display: flex;
+    align-items: center;
+    gap: var(--s-4);
+    min-width: 180px;
+  }
+
+  .page-counter {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .hud-dots {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+  }
+
+  .hud-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-pill);
+    background: var(--hairline);
+    padding: 0;
+    transition: width var(--t-small) var(--ease), background var(--t-small) var(--ease);
+  }
+
+  body.is-dark-root .hud-dot {
+    background: var(--muted);
+  }
+
+  .hud-dot.is-active {
+    width: 24px;
+    background: var(--ink);
+  }
+
+  body.is-dark-root .hud-dot.is-active {
+    background: var(--paper);
+  }
+
+  .hud-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+  }
+
+  /* =========================================================
+     SPEAKER NOTES / TELEPROMPTER DRAWER (P)
+     ========================================================= */
+  .notes-drawer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 90;
+    background: var(--paper);
+    color: var(--ink);
+    border-top: 1px solid var(--ink);
+    transform: translateY(100%);
+    transition: transform var(--t-medium) var(--ease);
+  }
+
+  .notes-drawer.is-open {
+    transform: translateY(0);
+  }
+
+  .notes-inner {
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: var(--s-6);
+  }
+
+  .notes-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-4);
+    padding-bottom: var(--s-4);
+    border-bottom: 1px solid var(--hairline);
+    margin-bottom: var(--s-4);
+  }
+
+  .notes-timer {
+    display: flex;
+    align-items: center;
+    gap: var(--s-4);
+  }
+
+  .notes-text {
+    font-size: clamp(16px, 1.8vw, 20px);
+    line-height: 1.85;
+    color: var(--ink);
+    max-width: 48em;
+  }
+
+  /* =========================================================
+     SLIDE OVERVIEW OVERLAY (G)
+     ========================================================= */
+  .overview {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: var(--paper);
+    color: var(--ink);
+    opacity: 0;
+    visibility: hidden;
+    overflow-y: auto;
+    padding: var(--s-8) var(--s-6) var(--s-16);
+    transition: opacity var(--t-small) var(--ease), visibility 0s linear var(--t-small);
+  }
+
+  .overview.is-open {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity var(--t-small) var(--ease), visibility 0s;
+  }
+
+  .overview-inner {
+    max-width: var(--container);
+    margin: 0 auto;
+  }
+
+  .overview-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: var(--s-6);
+    border-bottom: 1px solid var(--hairline);
+    margin-bottom: var(--s-8);
+  }
+
+  .overview-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--gutter);
+  }
+
+  .thumb-card {
+    grid-column: span 4;
+    text-align: left;
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-card);
+    padding: var(--s-6);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 168px;
+    transition: border-color var(--t-small) var(--ease), transform var(--t-small) var(--ease);
+  }
+
+  .thumb-card:hover {
+    border-color: var(--ink);
+    transform: translateY(-2px);
+  }
+
+  .thumb-card.is-current {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  .thumb-card.is-current .mono-label {
+    color: var(--hairline);
+  }
+
+  .thumb-num {
+    font-family: var(--font-display);
+    font-size: 36px;
+    line-height: 1;
+  }
+
+  .thumb-title {
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 1.25;
+    margin-top: var(--s-4);
+  }
+
+  /* =========================================================
+     KEYBOARD SHORTCUT TOAST
+     ========================================================= */
+  .kbd-toast {
+    position: fixed;
+    right: var(--s-6);
+    bottom: 80px;
+    z-index: 70;
+    padding: var(--s-2) var(--s-4);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-pill);
+    background: var(--paper);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--t-small) var(--ease);
+  }
+
+  body.is-dark-root .kbd-toast {
+    background: var(--ink);
+    border-color: var(--muted);
+    color: var(--hairline);
+  }
+
+  .kbd-toast.is-show {
+    opacity: 1;
+  }
+
+  /* =========================================================
+     RESPONSIVE BREAKPOINTS: 1024px & 768px
+     ========================================================= */
+  @media (max-width: 1024px) {
+    .col-3 { grid-column: span 6; }
+    .col-4 { grid-column: span 6; }
+    .col-5, .col-7, .col-6, .col-8 { grid-column: span 12; }
+    .thumb-card { grid-column: span 6; }
+    .slide {
+      align-items: flex-start;
+      padding: 80px var(--s-6) 92px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .thumb-card {
+      grid-column: span 12;
+    }
+    .brand-meta,
+    .hud-section-name,
+    .hud-dots {
+      display: none;
+    }
+    .hud-left {
+      min-width: auto;
+    }
+    .stack-row,
+    .commit-trigger {
+      grid-template-columns: 56px 1fr auto;
+      gap: var(--s-4);
+    }
+    .commit-detail {
+      padding-left: 0;
+    }
+    .tab-bar {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .matrix-2x2 {
+      grid-template-columns: 1fr;
+    }
+    .btn-primary,
+    .btn-secondary {
+      padding: 0 var(--s-4);
+    }
+  }
+
+  /* =========================================================
+     REDUCED MOTION
+     ========================================================= */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation: none !important;
+      transition: none !important;
+    }
+    .rise {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
+</head>
+<body class="is-dark-root">
+
+<!-- Top 2px Progress Hairline -->
+<div class="progress-track" aria-hidden="true">
+  <div class="progress-bar" id="progressBar"></div>
+</div>
+
+<!-- Top Navigation / Telemetry Header -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <button class="brand-wordmark" id="brandHome" aria-label="返回首页">bai (26)</button>
+      <span class="brand-meta">SPORTS HEALTH · STUDENT UNION</span>
+    </div>
+    <nav class="topbar-actions" aria-label="演示工具">
+      <button class="link-btn" id="notesToggle" aria-expanded="false">NOTES [P]</button>
+      <button class="link-btn" id="gridToggle" aria-expanded="false">GRID [G]</button>
+      <button class="link-btn" id="fullToggle">FULL [F]</button>
+    </nav>
+  </div>
+</header>
+
+<!-- Main Slide Deck -->
+<main class="deck" id="deck" aria-live="polite">
+
+  <!-- =======================================================
+       SLIDE 01 · HERO COVER (DARK)
+       Signal Budget: 1 (center 8px dot inside radial beacon)
+       ======================================================= -->
+  <section class="slide is-dark" data-title="封面 · 白天宇" data-kicker="STUDENT UNION · 2026" data-note="尊敬的各位老师、亲爱的同学们，大家好。我是2026级运动康复专业的白天宇，今天竞选年级学生会副主席。">
+    <div class="stage hero-center">
+      <div class="mono-kicker rise">STUDENT UNION · 2026 · CAMPAIGN DECK</div>
+
+      <div class="beacon-frame rise" aria-hidden="true">
+        <svg class="beacon-svg" viewBox="0 0 144 144" fill="none">
+          <circle cx="72" cy="72" r="68" stroke="#585A5A" stroke-width="1" stroke-dasharray="2 6" class="beacon-spin"/>
+          <circle cx="72" cy="72" r="46" stroke="#585A5A" stroke-width="1"/>
+          <line x1="72" y1="8" x2="72" y2="20" stroke="#FFFFFF" stroke-width="1"/>
+          <line x1="72" y1="124" x2="72" y2="136" stroke="#FFFFFF" stroke-width="1"/>
+          <line x1="8" y1="72" x2="20" y2="72" stroke="#FFFFFF" stroke-width="1"/>
+          <line x1="124" y1="72" x2="136" y2="72" stroke="#FFFFFF" stroke-width="1"/>
+        </svg>
+        <span class="signal-dot pulse"></span>
+      </div>
+
+      <h1 class="display rise">bai tianyu (26)</h1>
+      <p class="subhead rise" style="margin-top: 16px;">运动健康学院 · 主席团竞选</p>
+
+      <div class="cta-group rise">
+        <button class="btn-primary" data-jump="1">START DECK →</button>
+        <button class="btn-secondary" id="coverGridBtn">INDEX · 10 SLIDES</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       SLIDE 02 · 01 / PROFILE · SPEC GRID (LIGHT)
+       Signal Budget: 1 (8px status dot in kicker)
+       ======================================================= -->
+  <section class="slide" data-title="01 / 个人档案" data-kicker="01 / PROFILE" data-note="我想先说明一点：我没有学生干部的经历，连课代表都没做过。这是我的短板，我不打算绕开它。">
+    <div class="stage">
+      <div class="mono-kicker rise"><span class="signal-dot"></span><span>01 / PROFILE · BASELINE SPECS</span></div>
+      <div class="grid-12 align-center rise">
+        <div class="col-7">
+          <h2 class="headline">运动康复，大一。</h2>
+        </div>
+        <div class="col-5">
+          <p class="body-muted">没有学生干部履历，连课代表也没做过。这是我的短板，不绕开，直接摆在台面上。</p>
+        </div>
+      </div>
+
+      <div class="grid-12 rise" style="margin-top: 48px;">
+        <div class="card spec-card col-3">
+          <div class="mono-label">SPEC 01 · STATURE</div>
+          <div class="display-num" data-count="180">180</div>
+          <div class="spec-unit">
+            <span class="mono-label">CM · 身高</span>
+            <span class="mono-label">VERIFIED</span>
+          </div>
+        </div>
+
+        <div class="card spec-card col-3">
+          <div class="mono-label">SPEC 02 · MASS</div>
+          <div class="display-num" data-count="81">81</div>
+          <div class="spec-unit">
+            <span class="mono-label">KG · 体重</span>
+            <span class="mono-label">VERIFIED</span>
+          </div>
+        </div>
+
+        <div class="card spec-card col-3">
+          <div class="mono-label">SPEC 03 · COURT ROLE</div>
+          <div class="display-num">SF</div>
+          <div class="spec-unit">
+            <span class="mono-label">小前锋</span>
+            <span class="mono-label">WING</span>
+          </div>
+        </div>
+
+        <div class="card spec-card col-3">
+          <div class="mono-label">SPEC 04 · COHORT</div>
+          <div class="display-num" data-count="2026">2026</div>
+          <div class="spec-unit">
+            <span class="mono-label">入学年份</span>
+            <span class="mono-label">FRESHMAN</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       SLIDE 03 · 02 / WHAT I BRING · INTERACTIVE INDEX (DARK)
+       Signal Budget: 1 (giant Doto "4" highlighted in --signal)
+       ======================================================= -->
+  <section class="slide is-dark" data-title="02 / 我带四样东西来" data-kicker="02 / WHAT I BRING" data-note="但今天站在这里，我带来的，是几件已经做成的事。">
+    <div class="stage">
+      <div class="mono-kicker rise">02 / WHAT I BRING · CLICK ANY ROW TO INSPECT</div>
+
+      <div class="rise" style="display: flex; align-items: baseline; gap: 24px; flex-wrap: wrap;">
+        <span class="display" style="color: var(--signal);">4</span>
+        <h2 class="headline">我带四样东西来。</h2>
+      </div>
+
+      <div class="stack-list rise">
+        <button class="stack-row" data-jump="3">
+          <span class="stack-idx">01</span>
+          <div>
+            <div class="stack-title">小程序</div>
+            <div class="stack-sub">已经上线的东西</div>
+          </div>
+          <span class="stack-arrow">SLIDE 04 →</span>
+        </button>
+
+        <button class="stack-row" data-jump="4">
+          <span class="stack-idx">02</span>
+          <div>
+            <div class="stack-title">专业</div>
+            <div class="stack-sub">在赛场边上真干过</div>
+          </div>
+          <span class="stack-arrow">SLIDE 05 →</span>
+        </button>
+
+        <button class="stack-row" data-jump="5">
+          <span class="stack-idx">03</span>
+          <div>
+            <div class="stack-title">篮球</div>
+            <div class="stack-sub">球场上学会补位</div>
+          </div>
+          <span class="stack-arrow">SLIDE 06 →</span>
+        </button>
+
+        <button class="stack-row" data-jump="6">
+          <span class="stack-idx">04</span>
+          <div>
+            <div class="stack-title">内容</div>
+            <div class="stack-sub">宣传上手就能干</div>
+          </div>
+          <span class="stack-arrow">SLIDE 07 →</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       SLIDE 04 · 03 / BUILT · MINI PROGRAM (LIGHT)
+       Signal Budget: 1 (ONLINE 8px dot inside spec card)
+       ======================================================= -->
+  <section class="slide" data-title="03 / 小程序上线" data-kicker="03 / BUILT" data-note="第一件，是我真的做出过一个东西。用自己写的代码，独立开发了一款微信小程序，现在已经正式上线。一个想法从零到上线，中间的坎坷和返工，都是我一个人走过来的。">
+    <div class="stage">
+      <div class="mono-kicker rise">03 / BUILT · ASSET 01 OF 04</div>
+
+      <div class="grid-12 align-center rise">
+        <div class="col-7">
+          <h2 class="headline">我做过一个<br>上线的东西。</h2>
+          <p class="body-copy" style="margin-top: 24px;">用 AIGC 加自己写代码，独立做了一款微信小程序，现在正式上线。一个想法从零到落地，中间的坑我一个人踩过来了。</p>
+          <div class="tag-row">
+            <span class="tag">AIGC</span>
+            <span class="tag">VIBECODING</span>
+            <span class="tag">WECHAT MINI PROGRAM</span>
+          </div>
+        </div>
+
+        <div class="col-5">
+          <div class="card">
+            <div class="widget-head">
+              <span class="mono-label">DELIVERY PIPELINE</span>
+              <span class="status-chip"><span class="signal-dot pulse"></span>LIVE</span>
+            </div>
+
+            <div class="tab-bar" role="tablist" aria-label="开发阶段">
+              <button class="tab-btn" data-pipe="0" role="tab">01 IDEA</button>
+              <button class="tab-btn" data-pipe="1" role="tab">02 CODE</button>
+              <button class="tab-btn" data-pipe="2" role="tab">03 FIX</button>
+              <button class="tab-btn is-active" data-pipe="3" role="tab">04 SHIP</button>
+            </div>
+
+            <div class="readout-box" id="pipeReadout">
+              <div class="mono-label" id="pipeCode">STAGE 04 · PRODUCTION</div>
+              <div class="readout-title" id="pipeTitle" style="margin-top: 8px;">正式审核发布并上线运行</div>
+              <p class="body-muted" id="pipeDesc">完整经历需求拆解、界面实现、真机调试与提审发布，具备将学生会报名与统计需求直接产品化的交付力。</p>
+            </div>
+
+            <hr class="hairline">
+
+            <div class="spec-kv">
+              <span class="mono-label">OWNERSHIP</span>
+              <span class="mono-label">100% SOLO BUILD</span>
+            </div>
+            <div class="spec-kv">
+              <span class="mono-label">REUSE VALUE</span>
+              <span class="mono-label">ACTIVITY REGISTRATION</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       SLIDE 05 · 04 / FIELD · MEDICAL VOLUNTEER (DARK)
+       Signal Budget: 1 (active protocol indicator dot)
+       ======================================================= -->
+  <section class="slide is-dark" data-title="04 / 专业实战" data-kicker="04 / FIELD" data-note="第二件，是我的专业真正上过场。今年七月，在沈阳“和平杯”国际青少年足球邀请赛担任场边医疗志愿者，赛前贴扎、场边处理急性损伤、赛后交接伤情，整个流程我完整走了一遍。">
+    <div class="stage">
+      <div class="mono-kicker rise">04 / FIELD · ASSET 02 OF 04</div>
+
+      <div class="grid-12 align-center rise">
+        <div class="col-7">
+          <h2 class="headline">专业，<br>我上过场。</h2>
+          <p class="body-copy" style="margin-top: 24px;">2026.07 沈阳「和平杯」国际青少年足球邀请赛，场边医疗志愿者。贴扎、急性损伤处理、伤情交接，全流程走了一遍。</p>
+          <div class="tag-row">
+            <span class="tag">和平杯 · 医疗志愿者</span>
+            <span class="tag">运康科创协会 · 技能提升部</span>
+          </div>
+        </div>
+
+        <div class="col-5">
+          <div class="card">
+            <div class="widget-head">
+              <span class="mono-label">FIELD PROTOCOL · 2026.07</span>
+              <span class="mono-label">SHENYANG</span>
+            </div>
+
+            <div class="protocol-list" id="protocolList">
+              <button class="protocol-btn is-active" data-proto="0">
+                <span class="protocol-meta">
+                  <span class="signal-dot" data-proto-dot></span>
+                  <span>01 · 赛前防护贴扎</span>
+                </span>
+                <span class="mono-label">PRE-MATCH</span>
+              </button>
+
+              <button class="protocol-btn" data-proto="1">
+                <span class="protocol-meta">
+                  <span class="mono-label" data-proto-dot>—</span>
+                  <span>02 · 场边急性损伤处理</span>
+                </span>
+                <span class="mono-label">ON-FIELD</span>
+              </button>
+
+              <button class="protocol-btn" data-proto="2">
+                <span class="protocol-meta">
+                  <span class="mono-label" data-proto-dot>—</span>
+                  <span>03 · 赛后伤情记录交接</span>
+                </span>
+                <span class="mono-label">HANDOFF</span>
+              </button>
+            </div>
+
+            <div class="readout-box" style="margin-top: 24px;">
+              <div class="mono-label" id="protoCode">PROTOCOL 01 · PREVENTIVE</div>
+              <p class="body-muted" id="protoDesc" style="margin-top: 8px;">根据关节负荷与旧伤情况完成肌内效贴与白贴固定，降低高强度对抗中的踝膝扭伤风险。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       SLIDE 06 · 05 / COURT · BASKETBALL SF (LIGHT)
+       Signal Budget: 1 (single 8px red tactical dot on SVG court)
+       ======================================================= -->
+  <section class="slide" data-title="05 / 球场补位" data-kicker="05 / COURT" data-note="第三件，是篮球。我打小前锋，一米八、八十一公斤。这个位置教会我：看见漏洞就去补，出现机会就出手，出了问题不推卸。">
+    <div class="stage">
+      <div class="mono-kicker rise">05 / COURT · ASSET 03 OF 04</div>
+
+      <div class="grid-12 align-center rise">
+        <div class="col-7">
+          <h2 class="headline">球场上，<br>学会补位。</h2>
+          <p class="body-copy" style="margin-top: 24px;">小前锋。看见漏洞就去补，出了机会就出手，出了事不甩锅。文体部组织比赛，我熟。</p>
+          <div class="tag-row">
+            <span class="tag">180CM</span>
+            <span class="tag">81KG</span>
+            <span class="tag">SMALL FORWARD</span>
+          </div>
+        </div>
+
+        <div class="col-5">
+          <div class="card">
+            <div class="widget-head">
+              <span class="mono-label">WING TACTICAL MAP</span>
+              <span class="mono-label">POS · SF (3)</span>
+            </div>
+
+            <div class="court-wrap">
+              <svg class="court-svg" viewBox="0 0 320 200" fill="none" aria-label="半场战术示意图">
+                <!-- Outer boundary -->
+                <rect x="10" y="10" width="300" height="180" stroke="#000000" stroke-width="1"/>
+                <!-- Paint / Key -->
+                <rect x="112" y="10" width="96" height="90" stroke="#E5E7EB" stroke-width="1"/>
+                <!-- Free throw circle -->
+                <circle cx="160" cy="100" r="28" stroke="#E5E7EB" stroke-width="1" stroke-dasharray="3 3"/>
+                <!-- 3-point arc -->
+                <path d="M 36 10 L 36 74 A 124 124 0 0 0 284 74 L 284 10" stroke="#585A5A" stroke-width="1"/>
+                <!-- Rim -->
+                <line x1="142" y1="22" x2="178" y2="22" stroke="#000000" stroke-width="1"/>
+                <circle cx="160" cy="30" r="5" stroke="#000000" stroke-width="1"/>
+                <!-- Teammate nodes (monochrome) -->
+                <circle cx="160" cy="162" r="4" fill="#000000"/>
+                <circle cx="262" cy="96" r="4" fill="#000000"/>
+                <circle cx="122" cy="72" r="4" fill="#000000"/>
+                <circle cx="198" cy="72" r="4" fill="#000000"/>
+                <!-- Tactical vector line -->
+                <line id="courtLine" x1="58" y1="96" x2="112" y2="78" stroke="#585A5A" stroke-width="1" stroke-dasharray="2 3"/>
+                <!-- Single Signal Marker: SF -->
+                <circle id="courtDot" class="court-marker" cx="58" cy="96" r="5" fill="#D71921"/>
+              </svg>
+            </div>
+
+            <div class="tab-bar cols-3" role="tablist" aria-label="小前锋职责">
+              <button class="tab-btn is-active" data-court="0" role="tab">COVER 补位</button>
+              <button class="tab-btn" data-court="1" role="tab">STRIKE 出手</button>
+              <button class="tab-btn" data-court="2" role="tab">OWN 兜底</button>
+            </div>
+
+            <div class="readout-box">
+              <div class="mono-label" id="courtCode">MODE 01 · HELP DEFENSE</div>
+              <p class="body-muted" id="courtDesc" style="margin-top: 8px;">看见防线漏洞第一时间协防轮转，团队里缺哪个环节就顶上哪个位置。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       SLIDE 07 · 06 / CONTENT · MEDIA & DECKS (DARK)
+       Signal Budget: 1 (REC 8px dot in kicker)
+       ======================================================= -->
+  <section class="slide is-dark" data-title="06 / 内容与宣传" data-kicker="06 / CONTENT" data-note="第四件，是内容方面的积累。我参与一个康复科普账号的选题和分镜设计，也独立运营一个账号，记录我在康创中心学习的日常。">
+    <div class="stage">
+      <div class="mono-kicker rise"><span class="signal-dot pulse"></span><span>06 / CONTENT · ASSET 04 OF 04</span></div>
+
+      <div class="grid-12 align-center rise">
+        <div class="col-6">
+          <h2 class="headline">宣传，<br>上手就能干。</h2>
+          <p class="body-copy" style="margin-top: 24px;">参与康复科普账号的选题和分镜设计，也独立运营记录康创学习的账号。PPT 也能熟练制作。</p>
+          <div class="tag-row">
+            <span class="tag">选题 · 分镜</span>
+            <span class="tag">康创记录</span>
+            <span class="tag">DECK SYSTEMS</span>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="matrix-2x2" id="contentMatrix">
+            <button class="matrix-cell is-active" data-media="0">
+              <span class="mono-label">MODULE 01</span>
+              <div>
+                <div class="stack-title">选题策划</div>
+                <div class="mono-label" style="margin-top: 8px;">REHAB SCIENCE</div>
+              </div>
+            </button>
+
+            <button class="matrix-cell" data-media="1">
+              <span class="mono-label">MODULE 02</span>
+              <div>
+                <div class="stack-title">分镜脚本</div>
+                <div class="mono-label" style="margin-top: 8px;">STORYBOARD</div>
+              </div>
+            </button>
+
+            <button class="matrix-cell" data-media="2">
+              <span class="mono-label">MODULE 03</span>
+              <div>
+                <div class="stack-title">账号运营</div>
+                <div class="mono-label" style="margin-top: 8px;">SOLO CHANNEL</div>
+              </div>
+            </button>
+
+            <button class="matrix-cell" data-media="3">
+              <span class="mono-label">MODULE 04</span>
+              <div>
+                <div class="stack-title">演示文稿</div>
+                <div class="mono-label" style="margin-top: 8px;">PPT &amp; VISUALS</div>
+              </div>
+            </button>
+          </div>
+
+          <div class="card" style="margin-top: 16px;">
+            <div class="mono-label" id="mediaLabel">SPEC · REHAB TOPIC PLANNING</div>
+            <p class="body-muted" id="mediaDesc" style="margin-top: 8px;">将运动康复专业知识拆解为学生看得懂、用得上的科普选题，直接服务学院官方宣传输出。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       SLIDE 08 · 07 / POSITION · ROLE CLARITY (LIGHT)
+       Signal Budget: 1 (TARGET 8px dot on Vice President card)
+       ======================================================= -->
+  <section class="slide" data-title="07 / 竞选主张" data-kicker="07 / POSITION" data-note="我竞选的是副主席，并且服从调剂。也许有人会问，为什么不直接竞选主席？我说句实在话：统筹全局的经验我现在还没有，硬说自己能胜任，是不负责任的。">
+    <div class="stage">
+      <div class="mono-kicker rise">07 / POSITION · HONEST CALIBRATION</div>
+
+      <div class="grid-12 align-center rise">
+        <div class="col-6">
+          <h2 class="headline">我选副主席，<br>服从调剂。</h2>
+        </div>
+        <div class="col-6">
+          <p class="body-copy">统筹全局的经验我还没有，硬说自己行是骗人。副主席要的，是把具体的事扛起来、干利索。</p>
+        </div>
+      </div>
+
+      <div class="grid-12 rise" style="margin-top: 48px;">
+        <div class="card pos-card col-4">
+          <div class="widget-head" style="margin-bottom: 16px;">
+            <span class="mono-label">ROLE 01</span>
+            <span class="mono-label">NOT YET</span>
+          </div>
+          <div>
+            <div class="subhead">主席</div>
+            <p class="body-muted" style="margin-top: 12px;">统筹全局与跨部门协调，目前尚缺完整带队经验，不夸口、不冒进。</p>
+          </div>
+          <div class="mono-label" style="margin-top: 24px;">PRESIDENT · HONEST GAP</div>
+        </div>
+
+        <div class="card pos-card is-target col-4">
+          <div class="widget-head" style="margin-bottom: 16px;">
+            <span class="mono-label">ROLE 02</span>
+            <span class="status-chip"><span class="signal-dot pulse"></span>TARGET</span>
+          </div>
+          <div>
+            <div class="subhead">副主席</div>
+            <p class="body-muted" style="margin-top: 12px;">把赛事保障、技术工具、内容物料三类具体任务扛起来、干利索。</p>
+          </div>
+          <div class="mono-label" style="margin-top: 24px;">VICE PRESIDENT · EXACT FIT</div>
+        </div>
+
+        <div class="card pos-card col-4">
+          <div class="widget-head" style="margin-bottom: 16px;">
+            <span class="mono-label">ROLE 03</span>
+            <span class="mono-label">OPEN</span>
+          </div>
+          <div>
+            <div class="subhead">服从调剂</div>
+            <p class="body-muted" style="margin-top: 12px;">团队哪里需要补位，就去哪里。以交付结果为唯一标准。</p>
+          </div>
+          <div class="mono-label" style="margin-top: 24px;">ADJUSTMENT · READY TO COVER</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       SLIDE 09 · 08 / COMMIT · 3 ACTION ITEMS (DARK)
+       Signal Budget: 1 (single 8px dot on currently expanded row)
+       ======================================================= -->
+  <section class="slide is-dark" data-title="08 / 先做三件事" data-kicker="08 / COMMIT" data-note="副主席要做的，是把具体的事情扛起来、做扎实。我会先做三件事。">
+    <div class="stage">
+      <div class="mono-kicker rise">08 / COMMIT · CLICK TO EXPAND DELIVERABLES</div>
+      <h2 class="headline rise">先做三件事。</h2>
+
+      <div class="stack-list rise" id="commitList">
+        <div class="commit-item is-open" data-commit="0">
+          <button class="commit-trigger" aria-expanded="true">
+            <span class="stack-idx">01</span>
+            <div>
+              <div class="stack-title">赛前防护 · 赛后恢复</div>
+              <div class="stack-sub">篮球赛、运动会，用专业兜底</div>
+            </div>
+            <span class="status-chip" data-commit-badge><span class="signal-dot"></span>ACTIVE</span>
+          </button>
+          <div class="commit-detail">
+            <p class="body-muted">联合运康科创协会技能提升部，在学院篮球赛与田径运动会设立标准化场边保障点，覆盖贴扎防护、急性损伤应急处置与赛后放松指引。</p>
+            <div class="commit-pills">
+              <span class="tag">赛前贴扎</span>
+              <span class="tag">场边应急</span>
+              <span class="tag">赛后拉伸恢复</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="commit-item" data-commit="1">
+          <button class="commit-trigger" aria-expanded="false">
+            <span class="stack-idx">02</span>
+            <div>
+              <div class="stack-title">活动报名 · 统计</div>
+              <div class="stack-sub">用小程序做，不用等排期</div>
+            </div>
+            <span class="mono-label" data-commit-badge>EXPAND +</span>
+          </button>
+          <div class="commit-detail">
+            <p class="body-muted">复用已有微信小程序开发经验，快速搭建学院活动报名、签到核销与人数统计模块，告别重复填表与人工核对。</p>
+            <div class="commit-pills">
+              <span class="tag">轻量报名</span>
+              <span class="tag">自动统计</span>
+              <span class="tag">零外包等待</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="commit-item" data-commit="2">
+          <button class="commit-trigger" aria-expanded="false">
+            <span class="stack-idx">03</span>
+            <div>
+              <div class="stack-title">宣传 · 物料</div>
+              <div class="stack-sub">内容、PPT，上手就接</div>
+            </div>
+            <span class="mono-label" data-commit-badge>EXPAND +</span>
+          </button>
+          <div class="commit-detail">
+            <p class="body-muted">直接承接活动预告分镜、短视频脚本、推文视觉及汇报答辩 PPT 制作，让学院活动既有专业度也有传播力。</p>
+            <div class="commit-pills">
+              <span class="tag">选题分镜</span>
+              <span class="tag">活动物料</span>
+              <span class="tag">汇报 PPT</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       SLIDE 10 · 09 / CLOSING & FOOTER (LIGHT)
+       Signal Budget: 1 (8px center dot inside closing beacon)
+       ======================================================= -->
+  <section class="slide" data-title="09 / 结语" data-kicker="09 / CLOSING" data-note="归结起来，其实是一句话：我没有学生干部的经历，但我把事情做成过。请给我一个位置，我用结果说话。谢谢大家。">
+    <div class="stage hero-center">
+      <div class="mono-kicker rise">09 / CLOSING STATEMENT</div>
+      <h2 class="headline rise">我没当过学生干部，<br>但我把事做成过。</h2>
+
+      <div class="beacon-frame rise" aria-hidden="true">
+        <svg class="beacon-svg" viewBox="0 0 144 144" fill="none">
+          <circle cx="72" cy="72" r="68" stroke="#E5E7EB" stroke-width="1" stroke-dasharray="2 6" class="beacon-spin"/>
+          <circle cx="72" cy="72" r="46" stroke="#585A5A" stroke-width="1"/>
+          <line x1="72" y1="8" x2="72" y2="20" stroke="#000000" stroke-width="1"/>
+          <line x1="72" y1="124" x2="72" y2="136" stroke="#000000" stroke-width="1"/>
+          <line x1="8" y1="72" x2="20" y2="72" stroke="#000000" stroke-width="1"/>
+          <line x1="124" y1="72" x2="136" y2="72" stroke="#000000" stroke-width="1"/>
+        </svg>
+        <span class="signal-dot pulse"></span>
+      </div>
+
+      <p class="body-copy rise" style="text-align: center;">请给我一个位置，我用结果说话。谢谢大家。</p>
+
+      <div class="cta-group rise">
+        <button class="btn-primary" data-jump="0">RESTART · 重头播放</button>
+        <button class="btn-secondary" id="endGridBtn">SLIDE GRID · 全览</button>
+      </div>
+
+      <footer class="slide-footer rise">
+        <span class="mono-label">BAI TIANYU (26) · SPORTS REHABILITATION</span>
+        <span class="mono-label">SCHOOL OF SPORTS HEALTH · STUDENT UNION</span>
+        <span class="mono-label">THANKS · 谢谢</span>
+      </footer>
+    </div>
+  </section>
+
+</main>
+
+<!-- Bottom HUD Navigation -->
+<div class="hud" id="hud">
+  <div class="hud-inner">
+    <div class="hud-left">
+      <span class="page-counter" id="pageNum">01 / 10</span>
+      <span class="mono-label hud-section-name" id="sectionName">STUDENT UNION · 2026</span>
+    </div>
+
+    <div class="hud-dots" id="hudDots" role="tablist" aria-label="幻灯片导航"></div>
+
+    <div class="hud-controls">
+      <button class="btn-secondary" id="prevBtn" aria-label="上一页">← PREV</button>
+      <button class="btn-primary" id="nextBtn" aria-label="下一页">NEXT →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Speaker Notes / Teleprompter Drawer -->
+<aside class="notes-drawer" id="notesDrawer" aria-label="演讲提词器">
+  <div class="notes-inner">
+    <div class="notes-head">
+      <span class="mono-label">SPEAKER NOTES · TELEPROMPTER</span>
+      <div class="notes-timer">
+        <span class="mono-label" id="timerDisplay">00:00</span>
+        <button class="link-btn" id="timerToggle">START</button>
+        <button class="link-btn" id="timerReset">RESET</button>
+        <button class="link-btn" id="notesClose">CLOSE [ESC]</button>
+      </div>
+    </div>
+    <div class="notes-text" id="notesText"></div>
+  </div>
+</aside>
+
+<!-- Slide Overview Grid Modal -->
+<div class="overview" id="overviewModal" role="dialog" aria-modal="true" aria-label="幻灯片全览">
+  <div class="overview-inner">
+    <div class="overview-head">
+      <div>
+        <div class="mono-label">SLIDE INDEX · 10 FRAMES</div>
+        <div class="subhead" style="margin-top: 8px;">bai tianyu (26) — 全览导航</div>
+      </div>
+      <button class="btn-secondary" id="overviewClose">CLOSE [ESC]</button>
+    </div>
+    <div class="overview-grid" id="overviewGrid"></div>
+  </div>
+</div>
+
+<!-- Keyboard Hint Toast -->
+<div class="kbd-toast" id="kbdToast">← → NAV · P NOTES · G GRID · F FULL</div>
+
+<script>
+(function () {
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var total = slides.length;
+  var cur = 0;
+  var wheelLock = false;
+  var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var body = document.body;
+  var progressBar = document.getElementById('progressBar');
+  var pageNum = document.getElementById('pageNum');
+  var sectionName = document.getElementById('sectionName');
+  var hudDots = document.getElementById('hudDots');
+  var prevBtn = document.getElementById('prevBtn');
+  var nextBtn = document.getElementById('nextBtn');
+  var notesDrawer = document.getElementById('notesDrawer');
+  var notesText = document.getElementById('notesText');
+  var notesToggle = document.getElementById('notesToggle');
+  var notesClose = document.getElementById('notesClose');
+  var overviewModal = document.getElementById('overviewModal');
+  var overviewGrid = document.getElementById('overviewGrid');
+  var gridToggle = document.getElementById('gridToggle');
+  var overviewClose = document.getElementById('overviewClose');
+  var fullToggle = document.getElementById('fullToggle');
+  var kbdToast = document.getElementById('kbdToast');
+
+  function pad(n) {
+    return n < 10 ? '0' + n : '' + n;
+  }
+
+  /* Build monochrome HUD dots & Overview cards */
+  var dotButtons = [];
+  var thumbCards = [];
+
+  slides.forEach(function (slide, idx) {
+    var dot = document.createElement('button');
+    dot.className = 'hud-dot';
+    dot.setAttribute('aria-label', '跳转至第 ' + (idx + 1) + ' 页');
+    dot.addEventListener('click', function () { go(idx); });
+    hudDots.appendChild(dot);
+    dotButtons.push(dot);
+
+    var card = document.createElement('button');
+    card.className = 'thumb-card';
+    card.innerHTML =
+      '<div style="display:flex;justify-content:space-between;align-items:baseline;">' +
+        '<span class="thumb-num">' + pad(idx + 1) + '</span>' +
+        '<span class="mono-label">' + (slide.classList.contains('is-dark') ? 'DARK' : 'LIGHT') + '</span>' +
+      '</div>' +
+      '<div>' +
+        '<div class="mono-label" style="margin-top:16px;">' + (slide.getAttribute('data-kicker') || '') + '</div>' +
+        '<div class="thumb-title">' + (slide.getAttribute('data-title') || '') + '</div>' +
+      '</div>';
+    card.addEventListener('click', function () {
+      go(idx);
+      closeOverview();
+    });
+    overviewGrid.appendChild(card);
+    thumbCards.push(card);
+  });
+
+  /* Numeric counter animation on Slide 02 */
+  function animateCounters(slideEl) {
+    var nums = slideEl.querySelectorAll('[data-count]');
+    if (!nums.length) return;
+    nums.forEach(function (el) {
+      var target = parseInt(el.getAttribute('data-count'), 10);
+      if (reducedMotion || isNaN(target)) {
+        el.textContent = String(target);
+        return;
+      }
+      var start = performance.now();
+      var dur = 400;
+      var from = target > 1000 ? target - 24 : 0;
+      function tick(now) {
+        var t = Math.min(1, (now - start) / dur);
+        var eased = 1 - Math.pow(1 - t, 3);
+        el.textContent = String(Math.round(from + (target - from) * eased));
+        if (t < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    });
+  }
+
+  /* Core Navigation */
+  function go(index, skipHash) {
+    if (index < 0 || index >= total) return;
+    slides[cur].classList.remove('is-active');
+    cur = index;
+    var active = slides[cur];
+    active.classList.add('is-active');
+    active.scrollTop = 0;
+
+    body.classList.toggle('is-dark-root', active.classList.contains('is-dark'));
+    pageNum.textContent = pad(cur + 1) + ' / ' + pad(total);
+    sectionName.textContent = active.getAttribute('data-kicker') || '';
+    progressBar.style.width = (((cur + 1) / total) * 100) + '%';
+    notesText.textContent = active.getAttribute('data-note') || '';
+
+    prevBtn.disabled = cur === 0;
+    nextBtn.disabled = cur === total - 1;
+
+    dotButtons.forEach(function (d, k) {
+      d.classList.toggle('is-active', k === cur);
+      d.setAttribute('aria-selected', k === cur ? 'true' : 'false');
+    });
+
+    thumbCards.forEach(function (c, k) {
+      c.classList.toggle('is-current', k === cur);
+    });
+
+    animateCounters(active);
+
+    if (!skipHash) {
+      try {
+        history.replaceState(null, '', '#' + pad(cur + 1));
+      } catch (e) {}
+    }
+  }
+
+  function next() { if (cur < total - 1) go(cur + 1); }
+  function prev() { if (cur > 0) go(cur - 1); }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+  document.getElementById('brandHome').addEventListener('click', function () { go(0); });
+
+  /* Jump buttons inside slides */
+  document.querySelectorAll('[data-jump]').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var idx = parseInt(btn.getAttribute('data-jump'), 10);
+      if (!isNaN(idx)) go(idx);
+    });
+  });
+
+  /* Notes Drawer */
+  function toggleNotes(force) {
+    var open = typeof force === 'boolean'
+      ? notesDrawer.classList.toggle('is-open', force)
+      : notesDrawer.classList.toggle('is-open');
+    notesToggle.classList.toggle('is-on', open);
+    notesToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  notesToggle.addEventListener('click', function () { toggleNotes(); });
+  notesClose.addEventListener('click', function () { toggleNotes(false); });
+
+  /* Rehearsal Timer inside Notes Drawer */
+  var seconds = 0;
+  var timerId = null;
+  var timerDisplay = document.getElementById('timerDisplay');
+  var timerToggle = document.getElementById('timerToggle');
+  var timerReset = document.getElementById('timerReset');
+
+  function renderTimer() {
+    var m = Math.floor(seconds / 60);
+    var s = seconds % 60;
+    timerDisplay.textContent = pad(m) + ':' + pad(s);
+  }
+
+  timerToggle.addEventListener('click', function () {
+    if (timerId) {
+      clearInterval(timerId);
+      timerId = null;
+      timerToggle.textContent = 'START';
+    } else {
+      timerId = setInterval(function () {
+        seconds += 1;
+        renderTimer();
+      }, 1000);
+      timerToggle.textContent = 'PAUSE';
+    }
+  });
+
+  timerReset.addEventListener('click', function () {
+    if (timerId) {
+      clearInterval(timerId);
+      timerId = null;
+      timerToggle.textContent = 'START';
+    }
+    seconds = 0;
+    renderTimer();
+  });
+
+  /* Overview Modal */
+  function openOverview() {
+    overviewModal.classList.add('is-open');
+    gridToggle.classList.add('is-on');
+    gridToggle.setAttribute('aria-expanded', 'true');
+  }
+
+  function closeOverview() {
+    overviewModal.classList.remove('is-open');
+    gridToggle.classList.remove('is-on');
+    gridToggle.setAttribute('aria-expanded', 'false');
+  }
+
+  gridToggle.addEventListener('click', function () {
+    overviewModal.classList.contains('is-open') ? closeOverview() : openOverview();
+  });
+  overviewClose.addEventListener('click', closeOverview);
+  document.getElementById('coverGridBtn').addEventListener('click', function (e) {
+    e.stopPropagation();
+    openOverview();
+  });
+  document.getElementById('endGridBtn').addEventListener('click', function (e) {
+    e.stopPropagation();
+    openOverview();
+  });
+
+  /* Fullscreen Toggle */
+  fullToggle.addEventListener('click', function () {
+    if (!document.fullscreenElement) {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch(function () {});
+      }
+    } else if (document.exitFullscreen) {
+      document.exitFullscreen().catch(function () {});
+    }
+  });
+
+  document.addEventListener('fullscreenchange', function () {
+    fullToggle.classList.toggle('is-on', !!document.fullscreenElement);
+  });
+
+  /* =========================================================
+     SLIDE-SPECIFIC INTERACTIVE MODULES
+     ========================================================= */
+
+  /* Slide 04: Mini-Program Delivery Pipeline */
+  var pipeData = [
+    { code: 'STAGE 01 · CONCEPT', title: '从痛点定义最小可行功能', desc: '梳理高频使用场景，砍掉冗余页面，用极简交互把核心路径压到三步以内。' },
+    { code: 'STAGE 02 · BUILD', title: 'AIGC 协同 + 手写核心逻辑', desc: '结合 AIGC 加速样板代码与自己编写关键状态逻辑，单人完成前后端联调。' },
+    { code: 'STAGE 03 · DEBUG', title: '真机踩坑与反复返工修复', desc: '逐项排查兼容性、权限与边界异常，把原本只停留在想法的方案打磨至可用。' },
+    { code: 'STAGE 04 · PRODUCTION', title: '正式审核发布并上线运行', desc: '完整经历需求拆解、界面实现、真机调试与提审发布，具备将学生会报名与统计需求直接产品化的交付力。' }
+  ];
+  var pipeBtns = Array.prototype.slice.call(document.querySelectorAll('[data-pipe]'));
+  pipeBtns.forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var idx = parseInt(btn.getAttribute('data-pipe'), 10);
+      pipeBtns.forEach(function (b, k) { b.classList.toggle('is-active', k === idx); });
+      document.getElementById('pipeCode').textContent = pipeData[idx].code;
+      document.getElementById('pipeTitle').textContent = pipeData[idx].title;
+      document.getElementById('pipeDesc').textContent = pipeData[idx].desc;
+    });
+  });
+
+  /* Slide 05: Field Medical Volunteer Protocol */
+  var protoData = [
+    { code: 'PROTOCOL 01 · PREVENTIVE', desc: '根据关节负荷与旧伤情况完成肌内效贴与白贴固定，降低高强度对抗中的踝膝扭伤风险。' },
+    { code: 'PROTOCOL 02 · ACUTE CARE', desc: '场边实时观察比赛碰撞，第一时间介入冰敷、加压包扎与初步评估，控制急性损伤恶化。' },
+    { code: 'PROTOCOL 03 · HANDOFF', desc: '赛后完整整理受伤部位、处置步骤与后续建议，与领队及队医无缝交接伤情记录。' }
+  ];
+  var protoBtns = Array.prototype.slice.call(document.querySelectorAll('[data-proto]'));
+  protoBtns.forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var idx = parseInt(btn.getAttribute('data-proto'), 10);
+      protoBtns.forEach(function (b, k) {
+        var active = k === idx;
+        b.classList.toggle('is-active', active);
+        var holder = b.querySelector('[data-proto-dot]');
+        if (active) {
+          holder.className = 'signal-dot';
+          holder.textContent = '';
+        } else {
+          holder.className = 'mono-label';
+          holder.textContent = '—';
+        }
+      });
+      document.getElementById('protoCode').textContent = protoData[idx].code;
+      document.getElementById('protoDesc').textContent = protoData[idx].desc;
+    });
+  });
+
+  /* Slide 06: Basketball Half-Court Tactical Modes */
+  var courtData = [
+    { cx: 58, cy: 96, lx: 112, ly: 78, code: 'MODE 01 · HELP DEFENSE', desc: '看见防线漏洞第一时间协防轮转，团队里缺哪个环节就顶上哪个位置。' },
+    { cx: 244, cy: 136, lx: 160, ly: 34, code: 'MODE 02 · DECISIVE SHOT', desc: '机会出现时果断出手不犹豫，把策划变成按期落地的具体结果。' },
+    { cx: 160, cy: 96, lx: 160, ly: 34, code: 'MODE 03 · ACCOUNTABILITY', desc: '对抗和失误都算在自己头上，出了问题直接兜底解决，绝不甩锅。' }
+  ];
+  var courtBtns = Array.prototype.slice.call(document.querySelectorAll('[data-court]'));
+  var courtDot = document.getElementById('courtDot');
+  var courtLine = document.getElementById('courtLine');
+  courtBtns.forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var idx = parseInt(btn.getAttribute('data-court'), 10);
+      courtBtns.forEach(function (b, k) { b.classList.toggle('is-active', k === idx); });
+      var d = courtData[idx];
+      courtDot.setAttribute('cx', String(d.cx));
+      courtDot.setAttribute('cy', String(d.cy));
+      courtLine.setAttribute('x1', String(d.cx));
+      courtLine.setAttribute('y1', String(d.cy));
+      courtLine.setAttribute('x2', String(d.lx));
+      courtLine.setAttribute('y2', String(d.ly));
+      document.getElementById('courtCode').textContent = d.code;
+      document.getElementById('courtDesc').textContent = d.desc;
+    });
+  });
+
+  /* Slide 07: Content Production Matrix */
+  var mediaData = [
+    { label: 'SPEC · REHAB TOPIC PLANNING', desc: '将运动康复专业知识拆解为学生看得懂、用得上的科普选题，直接服务学院官方宣传输出。' },
+    { label: 'SPEC · VISUAL STORYBOARDING', desc: '把文字脚本落到具体镜头节奏与画面构图，减少拍摄返工，提升成片效率。' },
+    { label: 'SPEC · INDEPENDENT OPERATIONS', desc: '独立运营记录康创中心学习日常的个人账号，熟悉选题、剪辑、发布与复盘全链路。' },
+    { label: 'SPEC · PRESENTATION SYSTEMS', desc: '熟练制作结构清晰、视觉克制的汇报与活动 PPT，拿到素材即可上手交付。' }
+  ];
+  var mediaBtns = Array.prototype.slice.call(document.querySelectorAll('[data-media]'));
+  mediaBtns.forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var idx = parseInt(btn.getAttribute('data-media'), 10);
+      mediaBtns.forEach(function (b, k) { b.classList.toggle('is-active', k === idx); });
+      document.getElementById('mediaLabel').textContent = mediaData[idx].label;
+      document.getElementById('mediaDesc').textContent = mediaData[idx].desc;
+    });
+  });
+
+  /* Slide 09: Expandable Commitments (single signal dot moves to active row) */
+  var commitItems = Array.prototype.slice.call(document.querySelectorAll('[data-commit]'));
+  commitItems.forEach(function (item, idx) {
+    var trigger = item.querySelector('.commit-trigger');
+    trigger.addEventListener('click', function (e) {
+      e.stopPropagation();
+      commitItems.forEach(function (el, k) {
+        var open = k === idx;
+        el.classList.toggle('is-open', open);
+        el.querySelector('.commit-trigger').setAttribute('aria-expanded', open ? 'true' : 'false');
+        var badge = el.querySelector('[data-commit-badge]');
+        if (open) {
+          badge.className = 'status-chip';
+          badge.innerHTML = '<span class="signal-dot"></span>ACTIVE';
+        } else {
+          badge.className = 'mono-label';
+          badge.textContent = 'EXPAND +';
+        }
+      });
+    });
+  });
+
+  /* =========================================================
+     KEYBOARD, WHEEL, TOUCH & EDGE-CLICK NAVIGATION
+     ========================================================= */
+  var toastTimer;
+  function showToast() {
+    kbdToast.classList.add('is-show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () {
+      kbdToast.classList.remove('is-show');
+    }, 1800);
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      closeOverview();
+      toggleNotes(false);
+      return;
+    }
+
+    if (overviewModal.classList.contains('is-open')) {
+      if (e.key === 'g' || e.key === 'G') closeOverview();
+      return;
+    }
+
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault();
+      next();
+      showToast();
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') {
+      e.preventDefault();
+      prev();
+      showToast();
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      go(0);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      go(total - 1);
+    } else if (e.key === 'p' || e.key === 'P') {
+      toggleNotes();
+    } else if (e.key === 'g' || e.key === 'G') {
+      openOverview();
+    } else if (e.key === 'f' || e.key === 'F') {
+      fullToggle.click();
+    } else if (/^[1-9]$/.test(e.key)) {
+      go(parseInt(e.key, 10) - 1);
+    } else if (e.key === '0') {
+      go(9);
+    }
+  });
+
+  /* Throttled mouse wheel navigation */
+  document.addEventListener('wheel', function (e) {
+    if (overviewModal.classList.contains('is-open') || notesDrawer.classList.contains('is-open')) return;
+    if (wheelLock || Math.abs(e.deltaY) < 28) return;
+    var activeSlide = slides[cur];
+    var canScroll = activeSlide.scrollHeight > activeSlide.clientHeight + 4;
+    if (canScroll) {
+      if (e.deltaY > 0 && activeSlide.scrollTop + activeSlide.clientHeight < activeSlide.scrollHeight - 4) return;
+      if (e.deltaY < 0 && activeSlide.scrollTop > 4) return;
+    }
+    wheelLock = true;
+    e.deltaY > 0 ? next() : prev();
+    setTimeout(function () { wheelLock = false; }, 520);
+  }, { passive: true });
+
+  /* Touch swipe navigation */
+  var tx = null;
+  var ty = null;
+  document.addEventListener('touchstart', function (e) {
+    tx = e.touches[0].clientX;
+    ty = e.touches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener('touchend', function (e) {
+    if (tx === null) return;
+    var dx = e.changedTouches[0].clientX - tx;
+    var dy = e.changedTouches[0].clientY - ty;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+      dx < 0 ? next() : prev();
+    }
+    tx = null;
+    ty = null;
+  }, { passive: true });
+
+  /* Desktop edge-click navigation (ignores interactive controls) */
+  document.getElementById('deck').addEventListener('click', function (e) {
+    if (e.target.closest('button, a, .card, .stack-row, .commit-item')) return;
+    var w = window.innerWidth;
+    if (e.clientX > w * 0.72) next();
+    else if (e.clientX < w * 0.28) prev();
+  });
+
+  /* Initialize from URL hash or slide 01 */
+  var initial = 0;
+  var hashMatch = window.location.hash.match(/^#(\d{1,2})$/);
+  if (hashMatch) {
+    var parsed = parseInt(hashMatch[1], 10) - 1;
+    if (parsed >= 0 && parsed < total) initial = parsed;
+  }
+  go(initial, true);
+})();
+</script>
+</body>
+</html>
