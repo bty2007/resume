@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>白天宇 · 主席团竞选</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/doto@5.3.0/index.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/space-grotesk@5.3.0/300.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/space-grotesk@5.3.0/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/space-mono@5.3.0/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-sc@5.3.0/300.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-sc@5.3.0/400.css">
+<style>
+  :root{
+    --ink:#000000;
+    --paper:#FFFFFF;
+    --muted:#585A5A;
+    --surface:#F2F2F2;
+    --hairline:#E5E7EB;
+    --signal:#D71921;
+    --font-display:"Doto","Space Mono",monospace;
+    --font-sans:"Space Grotesk","Noto Sans SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    --font-mono:"Space Mono","Courier New",monospace;
+    --ease:cubic-bezier(.4,0,.2,1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    font-family:var(--font-sans);
+    background:var(--paper);
+    color:var(--ink);
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+
+  /* ===== 幻灯片容器 ===== */
+  .deck{position:fixed;inset:0;}
+  .slide{
+    position:absolute;inset:0;
+    display:flex;align-items:center;justify-content:center;
+    padding:clamp(24px,6vw,96px);
+    opacity:0;visibility:hidden;
+    transition:opacity 400ms var(--ease),visibility 0s linear 400ms;
+    background:var(--paper);color:var(--ink);
+  }
+  .slide.is-dark{background:var(--ink);color:var(--paper);}
+  .slide.is-active{opacity:1;visibility:visible;transition:opacity 400ms var(--ease),visibility 0s;}
+
+  /* 入场动画 */
+  .slide .stage{max-width:1280px;width:100%;}
+  .slide .rise{
+    opacity:0;transform:translateY(14px);
+    transition:opacity 400ms var(--ease),transform 400ms var(--ease);
+  }
+  .slide.is-active .rise{opacity:1;transform:translateY(0);}
+  .slide.is-active .rise:nth-child(1){transition-delay:60ms;}
+  .slide.is-active .rise:nth-child(2){transition-delay:130ms;}
+  .slide.is-active .rise:nth-child(3){transition-delay:200ms;}
+  .slide.is-active .rise:nth-child(4){transition-delay:270ms;}
+  .slide.is-active .rise:nth-child(5){transition-delay:340ms;}
+  .slide.is-active .rise:nth-child(6){transition-delay:410ms;}
+
+  /* ===== 排版元素 ===== */
+  .kicker{
+    font-family:var(--font-mono);
+    font-size:12px;letter-spacing:0.08em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:clamp(16px,3vh,32px);
+  }
+  .is-dark .kicker{color:var(--muted);}
+  .display{
+    font-family:var(--font-display);
+    font-weight:400;
+    line-height:1.05;
+    letter-spacing:-0.01em;
+    font-size:clamp(64px,14vw,220px);
+    color:var(--ink);
+  }
+  .is-dark .display{color:var(--paper);}
+  .headline{
+    font-weight:300;line-height:1.1;letter-spacing:-0.02em;
+    font-size:clamp(30px,5.5vw,72px);
+    color:var(--ink);
+  }
+  .is-dark .headline{color:var(--paper);}
+  .headline.hero{font-size:clamp(44px,8vw,120px);}
+  .body{
+    font-weight:400;line-height:1.75;
+    font-size:clamp(16px,2vw,22px);
+    color:var(--ink);max-width:30em;
+  }
+  .is-dark .body{color:var(--paper);}
+  .body .em{color:var(--ink);}
+  .is-dark .body .em{color:var(--paper);}
+  .label{
+    font-family:var(--font-mono);
+    font-size:11px;letter-spacing:0.08em;text-transform:uppercase;
+    color:var(--muted);
+  }
+  .tag{
+    display:inline-block;font-family:var(--font-mono);
+    font-size:11px;letter-spacing:0.08em;text-transform:uppercase;
+    padding:8px 16px;border:1px dashed var(--hairline);border-radius:9999px;
+    color:var(--muted);
+  }
+  .is-dark .tag{border-color:#2c2c2c;color:#9a9a9a;}
+  .tag + .tag{margin-left:8px;}
+  .hairline{border:none;border-top:1px solid var(--hairline);margin:clamp(20px,4vh,40px) 0;}
+  .is-dark .hairline{border-top-color:#2c2c2c;}
+
+  /* 红点 · 呼吸灯（底部页码小点） */
+  .dot{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--signal);display:inline-block;
+    animation:breathe 6s ease-in-out infinite;
+  }
+  @keyframes breathe{
+    0%,100%{
+      opacity:1;
+      box-shadow:0 0 0 0 rgba(215,25,33,.45),0 0 14px 4px rgba(215,25,33,.5);
+    }
+    50%{
+      opacity:.18;
+      box-shadow:0 0 0 0 rgba(215,25,33,0),0 0 2px 0 rgba(215,25,33,0);
+    }
+  }
+
+  /* ===== 大号呼吸灯 · 信号灯（封面/结尾视觉主角） ===== */
+  .beacon{
+    position:relative;display:inline-block;
+    width:clamp(140px,18vw,200px);
+    height:clamp(140px,18vw,200px);
+  }
+  .beacon .core{
+    position:absolute;top:50%;left:50%;
+    width:clamp(52px,7vw,80px);height:clamp(52px,7vw,80px);
+    transform:translate(-50%,-50%);
+    border-radius:50%;background:var(--signal);
+    box-shadow:0 0 28px 8px rgba(215,25,33,.55),0 0 90px 36px rgba(215,25,33,.16);
+    animation:core-pulse 6s ease-in-out infinite;
+  }
+  .beacon .ring{
+    position:absolute;top:50%;left:50%;
+    width:clamp(52px,7vw,80px);height:clamp(52px,7vw,80px);
+    border:1px solid rgba(215,25,33,.5);
+    border-radius:50%;
+    transform:translate(-50%,-50%);
+    animation:ring-out 6s cubic-bezier(.16,1,.3,1) infinite;
+  }
+  .beacon .ring.r2{animation-delay:3s;border-style:dashed;}
+  @keyframes core-pulse{
+    0%,100%{
+      opacity:1;
+      box-shadow:0 0 28px 8px rgba(215,25,33,.55),0 0 90px 36px rgba(215,25,33,.16);
+    }
+    50%{
+      opacity:.42;
+      box-shadow:0 0 12px 3px rgba(215,25,33,.24),0 0 34px 12px rgba(215,25,33,.07);
+    }
+  }
+  @keyframes ring-out{
+    0%{transform:translate(-50%,-50%) scale(.72);opacity:.75;}
+    100%{transform:translate(-50%,-50%) scale(2.7);opacity:0;}
+  }
+
+  /* 数据卡（surface） */
+  .specs{
+    display:flex;flex-wrap:wrap;gap:clamp(16px,3vw,48px);
+    margin-top:clamp(24px,5vh,56px);
+  }
+  .spec{
+    background:var(--surface);border-radius:12px;border:1px solid var(--hairline);
+    padding:clamp(18px,3vw,32px);min-width:120px;flex:1 1 150px;
+  }
+  .is-dark .spec{background:#141414;border-color:#2c2c2c;}
+  .spec .num{
+    font-family:var(--font-display);font-weight:400;line-height:1;
+    font-size:clamp(40px,5vw,72px);color:var(--ink);
+  }
+  .is-dark .spec .num{color:var(--paper);}
+  .spec .cap{margin-top:12px;}
+
+  /* 列表（四张牌 / 承诺） */
+  .stack{display:flex;flex-direction:column;gap:0;margin-top:clamp(24px,4vh,48px);}
+  .row{
+    display:flex;align-items:baseline;gap:clamp(16px,3vw,40px);
+    padding:clamp(18px,2.5vh,26px) 0;border-bottom:1px dashed var(--hairline);
+  }
+  .is-dark .row{border-bottom-color:#2c2c2c;}
+  .row:first-child{border-top:1px dashed var(--hairline);}
+  .is-dark .row:first-child{border-top-color:#2c2c2c;}
+  .row .idx{
+    font-family:var(--font-display);font-size:clamp(28px,4vw,52px);line-height:1;
+    color:var(--ink);min-width:2ch;
+  }
+  .is-dark .row .idx{color:var(--paper);}
+  .row .txt{flex:1;}
+  .row .txt .t{
+    font-weight:400;font-size:clamp(18px,2.6vw,28px);line-height:1.3;
+  }
+  .row .txt .s{
+    font-size:clamp(13px,1.6vw,16px);color:var(--muted);margin-top:6px;line-height:1.6;
+  }
+
+  /* ===== 底部控制栏 ===== */
+  .hud{
+    position:fixed;left:0;right:0;bottom:0;z-index:50;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px clamp(20px,4vw,40px);
+    font-family:var(--font-mono);font-size:11px;letter-spacing:0.08em;
+    color:var(--ink);
+  }
+  .is-dark-root .hud{color:var(--paper);}
+  .hud .page-num{min-width:72px;text-transform:uppercase;}
+  .hud .dots{display:flex;gap:10px;align-items:center;}
+  .hud .dots i{
+    width:8px;height:8px;border-radius:50%;background:var(--hairline);
+    display:block;transition:background 200ms var(--ease),transform 200ms var(--ease);
+  }
+  .hud .dots i.on{background:var(--signal);transform:scale(1.25);animation:breathe 6s ease-in-out infinite;}
+  .hud .ctl{display:flex;gap:8px;align-items:center;}
+  .hud button{
+    font-family:var(--font-mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;
+    background:transparent;border:1px solid var(--ink);border-radius:9999px;
+    color:var(--ink);min-height:40px;padding:0 18px;cursor:pointer;
+    transition:background 200ms var(--ease),color 200ms var(--ease);
+  }
+  .is-dark-root .hud button{border-color:var(--paper);color:var(--paper);}
+  .hud button:hover{background:var(--ink);color:var(--paper);}
+  .is-dark-root .hud button:hover{background:var(--paper);color:var(--ink);}
+  .hud button:disabled{opacity:.3;cursor:default;}
+  .hud button:disabled:hover{background:transparent;color:var(--ink);}
+  .is-dark-root .hud button:disabled:hover{background:transparent;color:var(--paper);}
+
+  /* ===== 提词面板 ===== */
+  .prompt{
+    position:fixed;left:0;right:0;bottom:0;z-index:60;
+    background:var(--paper);color:var(--ink);
+    border-top:1px solid var(--hairline);
+    padding:clamp(20px,4vh,36px) clamp(24px,5vw,64px);
+    transform:translateY(100%);transition:transform 300ms var(--ease);
+  }
+  .prompt.open{transform:translateY(0);}
+  .prompt .p-head{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:14px;
+  }
+  .prompt .p-head .lbl{font-family:var(--font-mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:10px;}
+  .prompt .p-head button{
+    font-family:var(--font-mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;
+    background:transparent;border:none;color:var(--muted);cursor:pointer;padding:6px 0;
+  }
+  .prompt .p-text{
+    font-size:clamp(16px,2vw,20px);line-height:1.9;font-weight:400;max-width:44em;
+  }
+
+  /* 键盘提示 */
+  .hint{
+    position:fixed;right:clamp(20px,4vw,40px);bottom:74px;z-index:40;
+    font-family:var(--font-mono);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;
+    color:var(--muted);opacity:0;transition:opacity 400ms var(--ease);pointer-events:none;
+  }
+  .hint.show{opacity:1;}
+
+  @media (prefers-reduced-motion: reduce){
+    .slide,.slide .rise,.prompt,.hud .dots i{transition:none !important;}
+    .slide .rise{opacity:1;transform:none;}
+    .dot,.hud .dots i.on,.beacon .core,.beacon .ring{animation:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+  <!-- 1 封面 -->
+  <section class="slide is-dark" data-note="尊敬的各位老师、亲爱的同学们，大家好。我是2026级运动康复专业的白天宇，今天竞选年级学生会副主席。">
+    <div class="stage" style="text-align:center;">
+      <div class="kicker rise">Student Union · 2026</div>
+      <div class="rise" style="margin:clamp(10px,2vh,20px) 0;">
+        <span class="beacon"><span class="core"></span><span class="ring"></span><span class="ring r2"></span></span>
+      </div>
+      <div class="display rise" style="font-size:clamp(52px,10vw,160px);">BAI TIANYU</div>
+      <div class="headline rise" style="margin-top:clamp(8px,2vh,20px);font-size:clamp(20px,3vw,36px);">运动健康学院 · 主席团竞选</div>
+    </div>
+  </section>
+
+  <!-- 2 我是谁 -->
+  <section class="slide" data-note="我想先说明一点：我没有学生干部的经历，连课代表都没做过。这是我的短板，我不打算绕开它。">
+    <div class="stage">
+      <div class="kicker rise">01 / Profile</div>
+      <div class="headline hero rise">运动康复，<br>大一。</div>
+      <div class="rise specs">
+        <div class="spec"><div class="num">180</div><div class="cap label">cm · 身高</div></div>
+        <div class="spec"><div class="num">81</div><div class="cap label">kg · 体重</div></div>
+        <div class="spec"><div class="num">SF</div><div class="cap label">小前锋</div></div>
+        <div class="spec"><div class="num">2026</div><div class="cap label">入学</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 四张牌总览 -->
+  <section class="slide is-dark" data-note="但今天站在这里，我带来的，是几件已经做成的事。">
+    <div class="stage">
+      <div class="kicker rise">02 / What I Bring</div>
+      <div class="rise" style="display:flex;align-items:baseline;gap:clamp(16px,3vw,32px);">
+        <span class="display rise" style="color:var(--signal);">4</span>
+        <span class="headline rise">我带四样东西来</span>
+      </div>
+      <div class="rise stack">
+        <div class="row"><span class="idx">01</span><div class="txt"><div class="t">小程序</div><div class="s">已经上线的东西</div></div></div>
+        <div class="row"><span class="idx">02</span><div class="txt"><div class="t">专业</div><div class="s">在赛场边上真干过</div></div></div>
+        <div class="row"><span class="idx">03</span><div class="txt"><div class="t">篮球</div><div class="s">球场上学会补位</div></div></div>
+        <div class="row"><span class="idx">04</span><div class="txt"><div class="t">内容</div><div class="s">宣传上手就能干</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 牌一 小程序 -->
+  <section class="slide" data-note="第一件，是我真的做出过一个东西。用自己写的代码，独立开发了一款微信小程序，现在已经正式上线。一个想法从零到上线，中间的坎坷和返工，都是我一个人走过来的。">
+    <div class="stage">
+      <div class="kicker rise">03 / Built</div>
+      <div class="headline rise">我做过一个<br>上线的东西。</div>
+      <div class="body rise" style="margin-top:clamp(20px,4vh,36px);">用 AIGC 加自己写代码，独立做了一款微信小程序，现在正式上线。一个想法从零到落地，中间的坑我一个人踩过来了。</div>
+      <div class="rise" style="margin-top:clamp(20px,4vh,36px);">
+        <span class="tag">AIGC</span><span class="tag">Vibecoding</span><span class="tag">小程序</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 牌二 专业 -->
+  <section class="slide is-dark" data-note="第二件，是我的专业真正上过场。今年七月，在沈阳“和平杯”国际青少年足球邀请赛担任场边医疗志愿者，赛前贴扎、场边处理急性损伤、赛后交接伤情，整个流程我完整走了一遍。">
+    <div class="stage">
+      <div class="kicker rise">04 / Field</div>
+      <div class="headline rise">专业，<br>我上过场。</div>
+      <div class="body rise" style="margin-top:clamp(20px,4vh,36px);">2026.07 沈阳「和平杯」国际青少年足球邀请赛，场边医疗志愿者。贴扎、急性损伤处理、伤情交接，全流程走了一遍。</div>
+      <div class="rise" style="margin-top:clamp(20px,4vh,36px);">
+        <span class="tag">和平杯 · 医疗志愿者</span><span class="tag">运康科创协会 · 技能提升部</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 牌三 篮球 -->
+  <section class="slide" data-note="第三件，是篮球。我打小前锋，一米八、八十一公斤。这个位置教会我：看见漏洞就去补，出现机会就出手，出了问题不推卸。">
+    <div class="stage">
+      <div class="kicker rise">05 / Court</div>
+      <div class="headline rise">球场上，<br>学会补位。</div>
+      <div class="body rise" style="margin-top:clamp(20px,4vh,36px);">小前锋。看见漏洞就去补，出了机会就出手，出了事不甩锅。文体部组织比赛，我熟。</div>
+      <div class="rise" style="margin-top:clamp(20px,4vh,36px);">
+        <span class="tag">180cm</span><span class="tag">81kg</span><span class="tag">SF</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 牌四 内容 -->
+  <section class="slide is-dark" data-note="第四件，是内容方面的积累。我参与一个康复科普账号的选题和分镜设计，也独立运营一个账号，记录我在康创中心学习的日常。">
+    <div class="stage">
+      <div class="kicker rise">06 / Content</div>
+      <div class="headline rise">宣传，<br>上手就能干。</div>
+      <div class="body rise" style="margin-top:clamp(20px,4vh,36px);">参与康复科普账号的选题和分镜设计，也独立运营记录康创学习的账号。PPT 也能熟练制作。</div>
+      <div class="rise" style="margin-top:clamp(20px,4vh,36px);">
+        <span class="tag">选题 · 分镜</span><span class="tag">康创记录</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 主张 -->
+  <section class="slide" data-note="我竞选的是副主席，并且服从调剂。也许有人会问，为什么不直接竞选主席？我说句实在话：统筹全局的经验我现在还没有，硬说自己能胜任，是不负责任的。">
+    <div class="stage">
+      <div class="kicker rise">07 / Position</div>
+      <div class="headline rise">我选副主席，<br>服从调剂。</div>
+      <div class="body rise" style="margin-top:clamp(20px,4vh,36px);">统筹全局的经验我还没有，硬说自己行是骗人。副主席要的，是把具体的事扛起来、干利索。</div>
+      <div class="rise" style="margin-top:clamp(20px,4vh,36px);">
+        <span class="tag">Vice President</span><span class="tag">服从调剂</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 承诺 -->
+  <section class="slide is-dark" data-note="副主席要做的，是把具体的事情扛起来、做扎实。我会先做三件事。">
+    <div class="stage">
+      <div class="kicker rise">08 / Commit</div>
+      <div class="headline rise">先做三件事。</div>
+      <div class="rise stack">
+        <div class="row"><span class="idx">01</span><div class="txt"><div class="t">赛前防护 · 赛后恢复</div><div class="s">篮球赛、运动会，用专业兜底</div></div></div>
+        <div class="row"><span class="idx">02</span><div class="txt"><div class="t">活动报名 · 统计</div><div class="s">用小程序做，不用等排期</div></div></div>
+        <div class="row"><span class="idx">03</span><div class="txt"><div class="t">宣传 · 物料</div><div class="s">内容、PPT，上手就接</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 结尾 -->
+  <section class="slide" data-note="归结起来，其实是一句话：我没有学生干部的经历，但我把事情做成过。请给我一个位置，我用结果说话。谢谢大家。">
+    <div class="stage" style="text-align:center;">
+      <div class="headline hero rise">我没当过学生干部，<br>但我把事做成过。</div>
+      <div class="rise" style="margin:clamp(20px,4vh,36px) 0;">
+        <span class="beacon"><span class="core"></span><span class="ring"></span><span class="ring r2"></span></span>
+      </div>
+      <div class="label rise" style="margin-top:clamp(8px,2vh,16px);">谢谢 · Thanks</div>
+    </div>
+  </section>
+
+</div>
+
+<!-- 底部控制栏 -->
+<div class="hud" id="hud">
+  <div class="page-num" id="pageNum">01 / 10</div>
+  <div class="dots" id="dots"></div>
+  <div class="ctl">
+    <button id="promptBtn" aria-label="提词">讲稿</button>
+    <button id="prevBtn" aria-label="上一页">‹</button>
+    <button id="nextBtn" aria-label="下一页">›</button>
+  </div>
+</div>
+
+<!-- 提词面板 -->
+<div class="prompt" id="prompt">
+  <div class="p-head">
+    <span class="lbl"><span class="dot"></span> 提词 · Prompt</span>
+    <button id="promptClose">关闭 · Esc</button>
+  </div>
+  <div class="p-text" id="promptText"></div>
+</div>
+
+<div class="hint" id="hint">← → 翻页 · 空格下一页 · P 提词</div>
+
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var dotsBox = document.getElementById('dots');
+  var pageNum = document.getElementById('pageNum');
+  var prompt = document.getElementById('prompt');
+  var promptText = document.getElementById('promptText');
+  var hint = document.getElementById('hint');
+  var body = document.body;
+  var cur = 0;
+  var total = slides.length;
+
+  // 生成指示点
+  slides.forEach(function(s,i){
+    var d = document.createElement('i');
+    d.addEventListener('click',function(){go(i);});
+    dotsBox.appendChild(d);
+  });
+  var dots = Array.prototype.slice.call(dotsBox.children);
+
+  function go(i){
+    if(i<0||i>=total||i===cur)return;
+    slides[cur].classList.remove('is-active');
+    cur=i;
+    slides[cur].classList.add('is-active');
+    pageNum.textContent = pad(cur+1)+' / '+pad(total);
+    dots.forEach(function(d,k){d.classList.toggle('on',k===cur);});
+    body.classList.toggle('is-dark-root', slides[cur].classList.contains('is-dark'));
+    document.getElementById('prevBtn').disabled = (cur===0);
+    document.getElementById('nextBtn').disabled = (cur===total-1);
+    promptText.textContent = slides[cur].getAttribute('data-note')||'';
+  }
+  function pad(n){return n<10?'0'+n:''+n;}
+  function next(){go(cur+1);}
+  function prev(){go(cur-1);}
+
+  document.getElementById('nextBtn').addEventListener('click',next);
+  document.getElementById('prevBtn').addEventListener('click',prev);
+
+  function togglePrompt(){
+    var open = prompt.classList.toggle('open');
+    document.getElementById('promptBtn').textContent = open?'收起':'讲稿';
+  }
+  document.getElementById('promptBtn').addEventListener('click',togglePrompt);
+  document.getElementById('promptClose').addEventListener('click',togglePrompt);
+
+  // 键盘
+  var keyTimer;
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '||e.key==='PageDown'){e.preventDefault();next();}
+    else if(e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();prev();}
+    else if(e.key==='p'||e.key==='P'){togglePrompt();}
+    else if(e.key==='Escape'){prompt.classList.remove('open');document.getElementById('promptBtn').textContent='讲稿';}
+    hint.classList.add('show');
+    clearTimeout(keyTimer);
+    keyTimer=setTimeout(function(){hint.classList.remove('show');},2000);
+  });
+
+  // 触摸滑动
+  var tx=null,ty=null;
+  document.addEventListener('touchstart',function(e){tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+  document.addEventListener('touchend',function(e){
+    if(tx===null)return;
+    var dx=e.changedTouches[0].clientX-tx;
+    var dy=e.changedTouches[0].clientY-ty;
+    if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)){dx<0?next():prev();}
+    tx=null;ty=null;
+  },{passive:true});
+
+  // 点击空白区域翻页（桌面可选）
+  document.getElementById('deck').addEventListener('click',function(e){
+    if(e.target.closest('.hud')||e.target.closest('.prompt'))return;
+    var r=e.currentTarget.getBoundingClientRect();
+    if(e.clientX>r.left+r.width*0.7){next();}
+    else if(e.clientX<r.left+r.width*0.3){prev();}
+  });
+
+  // 初始化
+  slides[0].classList.add('is-active');
+  pageNum.textContent = '01 / '+pad(total);
+  promptText.textContent = slides[0].getAttribute('data-note')||'';
+  body.classList.add('is-dark-root');
+  document.getElementById('prevBtn').disabled = true;
+  document.getElementById('nextBtn').disabled = (total===1);
+  dots[0].classList.add('on');
+})();
+</script>
+</body>
+</html>
